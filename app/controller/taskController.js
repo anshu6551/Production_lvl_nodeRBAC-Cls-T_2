@@ -283,42 +283,83 @@ class TaskController {
         }
     }
 
+    // async deleteTask(req, res) {
+    //     console.log(req.params.id);
+    //     try {
+
+    //         const id = req.params.id;
+            
+
+    //         const existdata = await Task.findById(id)
+    //         console.log(existdata);
+
+    //         if (!existdata) {
+    //             return res.status(400).json({
+    //                 success: false,
+    //                 message: "data not exist",
+    //             });
+    //         }
+
+    //         if (existdata.attachments) {
+    //             let deletedImage = await cloudinary.uploader.destroy(
+    //                 existdata.cloudinaryid,
+    //             );
+    //         }
+
+    //        const updatedata = await Task.findByIdAndUpdate(id, req.body, { returnDocument: 'after' });
+    //         return res.status(200).json({
+    //             success: true,
+    //             message: 'User deleted successfully',
+
+    //         });
+
+
+    //     } catch (error) {
+    //         return res.status(500).json({
+    //             success: false,
+    //             message: error.message,
+    //         });
+    //     }
+    // }
     async deleteTask(req, res) {
-        try {
+    console.log(req.params.id);
+    try {
+        const id = req.params.id;
 
-            const id = req.params.id;
+        
+        const existdata = await Task.findById(id);
+        console.log("Found Task:", existdata);
 
-            const existdata = await User.findById(id)
-
-            if (!existdata) {
-                return res.status(400).json({
-                    success: false,
-                    message: "data not exist",
-                });
-            }
-
-            if (existdata.attachments) {
-                let deletedImage = await cloudinary.uploader.destroy(
-                    existdata.cloudinaryid,
-                );
-            }
-
-            const deletedata = await User.findByIdAndUpdate(id, { isdelete: true }, { new: true })
-
-            return res.status(200).json({
-                success: true,
-                message: 'User deleted successfully',
-
-            });
-
-
-        } catch (error) {
-            return res.status(500).json({
+        
+        if (!existdata) {
+            return res.status(400).json({
                 success: false,
-                message: error.message,
+                message: "Data does not exist",
             });
         }
+
+       
+        if (existdata.cloudinaryid) {
+            await cloudinary.uploader.destroy(existdata.cloudinaryid);
+        }
+
+       
+        const deletedData = await Task.findByIdAndDelete(id);
+
+        if (deletedData) {
+            return res.status(200).json({
+                success: true,
+                message: 'Task and associated media deleted successfully',
+            });
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
     }
+}
 
     async updateTaskStatus(req, res) {
         try {
@@ -398,7 +439,7 @@ class TaskController {
                 });
 
             } else {
-                if (assignUser.role === 'employee') {
+                if (assignUser.role === 'manager') {
 
                     const updatedata = await Task.findByIdAndUpdate(id, req.body, { new: true })
 
