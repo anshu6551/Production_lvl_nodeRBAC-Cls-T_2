@@ -9,62 +9,9 @@ const jwt = require("jsonwebtoken");
 const cloudinary = require("../config/cloudinary");
 
 class AuthController {
-  // async register(req, res) {
-  //   try {
-  //     const { name, email, password, phone,role } = req.body;
-
-  //     if (!name || !email || !password || !phone) {
-  //       return res.status(400).json({
-  //         success: false,
-  //         message: "All field are required",
-  //       });
-  //     }
-
-  //     const existUser = await User.findOne({ email });
-
-  //     if (existUser) {
-  //       return res.status(400).json({
-  //         message: "Admin already exist",
-  //       });
-  //     }
-
-  //     const salt = await bcrypt.genSalt(10);
-
-  //     const hashPassword = await bcrypt.hash(password, salt);
-
-  //     const userdata = new User({
-  //       name,
-  //       email,
-  //       password: hashPassword,
-  //       phone,
-  //       role: role || "admin",
-  //     });
-
-  //     if (req.file) {
-  //       userdata.avatar = req.file.path;
-
-  //       userdata.cloudinaryid = req.file.filename;
-  //     }
-
-  //     const result = await userdata.save();
-
-  //     if (result) {
-  //       return res.status(201).json({
-  //         success: true,
-  //         message: "Admin created successfully",
-  //         data: result,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     return res.status(500).json({
-  //       success: false,
-  //       message: error.message,
-  //     });
-  //   }
-  // }
+ 
   async register(req, res) {
-    console.log("RECEIVED BODY:", req.body);
-    console.log("RECEIVED FILE:", req.file);
+   
     try {
       const { name, email, password, phone,role } = req.body;
       
